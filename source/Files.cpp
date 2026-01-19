@@ -1,5 +1,7 @@
 #include "Files.hpp"
 
+#include <string>
+
 FS_Path getPathInfo(const char *path, FS_ArchiveID *archive) {
   *archive = ARCHIVE_SDMC;
   FS_Path filePath = {(FS_PathType)0};
@@ -11,15 +13,12 @@ FS_Path getPathInfo(const char *path, FS_ArchiveID *archive) {
   } else if (*path != '/') {
     /* if the path is local (doesnt start with a slash), it needs to be appended
      * to the working dir to be valid. */
-    char *actualPath = NULL;
-    asprintf(&actualPath, "%s%s", WORKING_DIR, path);
-    filePath = fsMakePath(PATH_ASCII, actualPath);
-    free(actualPath);
+    filePath = fsMakePath(PATH_ASCII,
+                          std::string(WORKING_DIR + std::string(path)).c_str());
   }
 
   /* if the filePath wasnt set above, set it. */
-  if (filePath.size == 0)
-    filePath = fsMakePath(PATH_ASCII, path + prefixlen);
+  if (filePath.size == 0) filePath = fsMakePath(PATH_ASCII, path + prefixlen);
 
   return filePath;
 }
@@ -64,7 +63,7 @@ Result openFile(Handle *fileHandle, const char *path, bool write) {
   if (write)
     ret = FSFILE_SetSize(
         *fileHandle,
-        0); // truncate the file to remove previous contents before writing.
+        0);  // truncate the file to remove previous contents before writing.
 
   return ret;
 }
@@ -76,8 +75,7 @@ Result deleteFile(const char *path) {
   FS_Archive archive;
   Result ret =
       FSUSER_OpenArchive(&archive, archiveID, fsMakePath(PATH_EMPTY, ""));
-  if (R_FAILED(ret))
-    return ret;
+  if (R_FAILED(ret)) return ret;
   ret = FSUSER_DeleteFile(archive, filePath);
   FSUSER_CloseArchive(archive);
 
@@ -91,8 +89,7 @@ Result removeDir(const char *path) {
 
   Result ret =
       FSUSER_OpenArchive(&archive, archiveID, fsMakePath(PATH_EMPTY, ""));
-  if (R_FAILED(ret))
-    return ret;
+  if (R_FAILED(ret)) return ret;
   ret = FSUSER_DeleteDirectory(archive, filePath);
   FSUSER_CloseArchive(archive);
 
@@ -106,8 +103,7 @@ Result removeDirRecursive(const char *path) {
 
   Result ret =
       FSUSER_OpenArchive(&archive, archiveID, fsMakePath(PATH_EMPTY, ""));
-  if (R_FAILED(ret))
-    return ret;
+  if (R_FAILED(ret)) return ret;
   ret = FSUSER_DeleteDirectoryRecursively(archive, filePath);
   FSUSER_CloseArchive(archive);
 

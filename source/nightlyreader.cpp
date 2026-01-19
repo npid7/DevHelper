@@ -1,13 +1,14 @@
 #include "nightlyreader.hpp"
-#include "cia.hpp"
-#include "download.hpp"
-#include <iostream>
-#include <rd7.hpp>
-#include <renderd7/log.hpp>
-
-#include <renderd7/Tasks.hpp>
 
 #include <curl/curl.h>
+
+#include <iostream>
+#include <rd7.hpp>
+#include <renderd7/Tasks.hpp>
+#include <renderd7/log.hpp>
+
+#include "cia.hpp"
+#include "download.hpp"
 
 extern float DLTotal;
 extern float DLNow;
@@ -119,12 +120,11 @@ void DBLoader::LoadEntry(int index) {
   APPH dbe;
   this->appsecs.clear();
   this->versions.clear();
-  
+
   showProgressBar = true;
   RenderD7::Tasks::create((ThreadFunc)displayProgressBar);
 
   for (auto const &it : ini) {
-
     auto const &section = it.first;
     std::cout << "[" << section << "]" << std::endl;
     this->appsecs.push_back(section);

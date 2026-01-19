@@ -1,15 +1,15 @@
 #include "scenes.hpp"
-#include <renderd7/Tasks.hpp>
+
 #include <cia.hpp>
 #include <download.hpp>
+#include <renderd7/Tasks.hpp>
 #include <renderd7/log.hpp>
 #include <stringextra.hpp>
 
 extern bool showProgressBar;
 extern int progressBarType;
 
-std::string standard =
-    "https://github.com/NPI-D7/nightlys/raw/master/db.ini";
+std::string standard = "https://github.com/NPI-D7/nightlys/raw/master/db.ini";
 
 extern float DLTotal;
 extern float DLNow;
@@ -18,8 +18,7 @@ bool CheckWifiStatus(void) {
   u32 wifiStatus;
   bool res = false;
 
-  if (R_SUCCEEDED(ACU_GetWifiStatus(&wifiStatus)) && wifiStatus)
-    res = true;
+  if (R_SUCCEEDED(ACU_GetWifiStatus(&wifiStatus)) && wifiStatus) res = true;
 
   return res;
 }
@@ -52,11 +51,17 @@ void DBSel::Draw(void) const {
                          "DevHelper->DB Browser");
     DrawFMBG();
 
-    for(size_t i = 0; i < ((dbld.db.e_list.size() < 9) ? dbld.db.e_list.size() : 10); i++) {
-      if(dirsel == (dirsel < 9 ? (int)i : (int) i + (dirsel - 9))) {
-        RenderD7::Draw::Rect(0, 26 + (i*18), 400, 18, RenderD7::Color::Hex("#444444"));
+    for (size_t i = 0;
+         i < ((dbld.db.e_list.size() < 9) ? dbld.db.e_list.size() : 10); i++) {
+      if (dirsel == (dirsel < 9 ? (int)i : (int)i + (dirsel - 9))) {
+        RenderD7::Draw::Rect(0, 26 + (i * 18), 400, 18,
+                             RenderD7::Color::Hex("#444444"));
       }
-      RenderD7::Draw::Text(10, 26 + i * 18, 0.6f, RenderD7::Color::Hex("#000000"), RenderD7::ShortString(dbld.db.e_list[(dirsel < 9 ? i : i + (dirsel -9))].name, 0.6f, 400));
+      RenderD7::Draw::Text(
+          10, 26 + i * 18, 0.6f, RenderD7::Color::Hex("#000000"),
+          RenderD7::ShortString(
+              dbld.db.e_list[(dirsel < 9 ? i : i + (dirsel - 9))].name, 0.6f,
+              400));
     }
 
     RenderD7::Draw::TextCentered(0, 216, 0.7f, RenderD7::Color::Hex("#ffffff"),
@@ -81,11 +86,17 @@ void DBSel::Draw(void) const {
                          "DevHelper->App-Ver Browser");
     DrawFMBG();
 
-    for(size_t i = 0; i < ((dbld.versions.size() < 9) ? dbld.versions.size() : 10); i++) {
-      if(dirsel == (dirsel < 9 ? (int)i : (int) i + (dirsel - 9))) {
-        RenderD7::Draw::Rect(0, 26 + (i*18), 400, 18, RenderD7::Color::Hex("#444444"));
+    for (size_t i = 0;
+         i < ((dbld.versions.size() < 9) ? dbld.versions.size() : 10); i++) {
+      if (dirsel == (dirsel < 9 ? (int)i : (int)i + (dirsel - 9))) {
+        RenderD7::Draw::Rect(0, 26 + (i * 18), 400, 18,
+                             RenderD7::Color::Hex("#444444"));
       }
-      RenderD7::Draw::Text(10, 26 + i * 18, 0.6f, RenderD7::Color::Hex("#000000"), RenderD7::ShortString(dbld.versions[(dirsel < 9 ? i : i + (dirsel -9))].ver, 0.6f, 400));
+      RenderD7::Draw::Text(
+          10, 26 + i * 18, 0.6f, RenderD7::Color::Hex("#000000"),
+          RenderD7::ShortString(
+              dbld.versions[(dirsel < 9 ? i : i + (dirsel - 9))].ver, 0.6f,
+              400));
     }
 
     RenderD7::Draw::TextCentered(
@@ -117,16 +128,12 @@ void DBSel::Logic(u32 hDown, u32 hHeld, u32 hUp, touchPosition touch) {
       state = APPV;
       dirsel = 0;
     }
-    if (hDown & KEY_UP && dirsel > 0)
-      dirsel--;
-    if (hDown & KEY_DOWN && dirsel < (int)dbld.db.e_list.size() - 1)
-      dirsel++;
-    if (hDown & KEY_LEFT && dirsel - 6 > 0)
-      dirsel -= 6;
+    if (hDown & KEY_UP && dirsel > 0) dirsel--;
+    if (hDown & KEY_DOWN && dirsel < (int)dbld.db.e_list.size() - 1) dirsel++;
+    if (hDown & KEY_LEFT && dirsel - 6 > 0) dirsel -= 6;
     if (hDown & KEY_RIGHT && dirsel + 6 < (int)dbld.db.e_list.size() - 1)
       dirsel += 6;
-    if (hDown & KEY_SELECT)
-      RenderD7::LoadSettings();
+    if (hDown & KEY_SELECT) RenderD7::LoadSettings();
     if (dirsel < this->SPos)
       this->SPos = dirsel;
     else if (dirsel > this->SPos + 7 - 1)
@@ -150,12 +157,9 @@ void DBSel::Logic(u32 hDown, u32 hHeld, u32 hUp, touchPosition touch) {
       dirsel = 0;
       state = DB;
     }
-    if (hDown & KEY_UP && dirsel > 0)
-      dirsel--;
-    if (hDown & KEY_DOWN && dirsel < (int)dbld.versions.size() - 1)
-      dirsel++;
-    if (hDown & KEY_LEFT && dirsel - 6 > 0)
-      dirsel -= 6;
+    if (hDown & KEY_UP && dirsel > 0) dirsel--;
+    if (hDown & KEY_DOWN && dirsel < (int)dbld.versions.size() - 1) dirsel++;
+    if (hDown & KEY_LEFT && dirsel - 6 > 0) dirsel -= 6;
     if (hDown & KEY_RIGHT && dirsel + 6 < (int)dbld.versions.size() - 1)
       dirsel += 6;
     if (dirsel < this->SPos)

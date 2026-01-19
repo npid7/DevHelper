@@ -1,14 +1,15 @@
 #pragma once
-#include "Ovls.hpp"
 #include <renderd7/ini.hpp>
 #include <string>
 #include <vector>
 
-#define D_P()                                                                  \
-  std::cout << "\u001b[33;1mBreakpoint reached: \n"                            \
-            << (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1            \
-                                       : __FILE__)                             \
-            << ":" << __LINE__ << "\u001b[0m\n";                               \
+#include "Ovls.hpp"
+
+#define D_P()                                                       \
+  std::cout << "\u001b[33;1mBreakpoint reached: \n"                 \
+            << (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 \
+                                       : __FILE__)                  \
+            << ":" << __LINE__ << "\u001b[0m\n";                    \
   for (int i = 0; i < 3 * 60; i++)
 struct DB_Entry {
   std::string name;
@@ -33,7 +34,7 @@ struct APPH {
 };
 
 class DBLoader {
-public:
+ public:
   DBLoader() {}
   ~DBLoader() {}
   void LoadDB(std::string link);
@@ -47,7 +48,7 @@ public:
   DB db;
   std::vector<APPH> versions;
 
-private:
+ private:
   std::vector<std::string> secs;
   std::vector<std::string> appsecs;
 };

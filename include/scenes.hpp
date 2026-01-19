@@ -3,12 +3,12 @@
 
 enum MState { DB, APPV };
 class DBSel : public RenderD7::Scene {
-public:
+ public:
   DBSel();
   void Draw(void) const override;
   void Logic(u32 hDown, u32 hHeld, u32 hUp, touchPosition touch) override;
 
-private:
+ private:
   int dirsel = 0;
   int SPos = 0;
   DBLoader dbld;

@@ -4,12 +4,12 @@
 #include <curl/curl.h>
 #include <dirent.h>
 #include <malloc.h>
-#include <regex>
-#include <string>
 #include <unistd.h>
-#include <vector>
 
 #include <rd7.hpp>
+#include <regex>
+#include <string>
+#include <vector>
 
 #define USER_AGENT APP_TITLE "-" VERSION_STRING
 
@@ -21,11 +21,11 @@
 CURL *CURL_HND;
 
 curl_off_t downloadTotal =
-    1; // Dont initialize with 0 to avoid division by zero later.
+    1;  // Dont initialize with 0 to avoid division by zero later.
 curl_off_t downloadNow = 0;
 curl_off_t downloadSpeed = 0;
 
-float DLTotal = 1; // Dont initialize with 0 to avoid division by zero later.
+float DLTotal = 1;  // Dont initialize with 0 to avoid division by zero later.
 float DLNow = 0;
 float DLSpeed = 0;
 
@@ -61,13 +61,11 @@ static int curlProgress(CURL *hnd, curl_off_t dltotal, curl_off_t dlnow,
 }
 
 bool filecommit() {
-  if (!downfile)
-    return false;
+  if (!downfile) return false;
   fseek(downfile, 0, SEEK_END);
   u32 byteswritten =
       fwrite(g_buffers[!g_index], 1, file_toCommit_size, downfile);
-  if (byteswritten != file_toCommit_size)
-    return false;
+  if (byteswritten != file_toCommit_size) return false;
   file_toCommit_size = 0;
   return true;
 }
@@ -78,8 +76,7 @@ static void commitToFileThreadFunc(void *args) {
   while (true) {
     LightEvent_Wait(&readyToCommit);
     LightEvent_Clear(&readyToCommit);
-    if (killThread)
-      threadExit(0);
+    if (killThread) threadExit(0);
     writeError = !filecommit();
     LightEvent_Signal(&waitCommit);
   }
@@ -90,8 +87,7 @@ static size_t file_handle_data(char *ptr, size_t size, size_t nmemb,
   (void)userdata;
   const size_t bsz = size * nmemb;
   size_t tofill = 0;
-  if (writeError)
-    return 0;
+  if (writeError) return 0;
 
   if (!g_buffers[g_index]) {
     LightEvent_Init(&waitCommit, RESET_STICKY);
@@ -105,8 +101,7 @@ static size_t file_handle_data(char *ptr, size_t size, size_t nmemb,
     g_buffers[0] = (char *)memalign(0x1000, FILE_ALLOC_SIZE);
     g_buffers[1] = (char *)memalign(0x1000, FILE_ALLOC_SIZE);
 
-    if (!fsCommitThread || !g_buffers[0] || !g_buffers[1])
-      return 0;
+    if (!fsCommitThread || !g_buffers[0] || !g_buffers[1]) return 0;
   }
 
   if (file_buffer_pos + bsz >= FILE_ALLOC_SIZE) {
@@ -129,7 +124,6 @@ static size_t file_handle_data(char *ptr, size_t size, size_t nmemb,
 }
 
 Result downloadToFile(const std::string &url, const std::string &path) {
-
   downloadTotal = 1;
   downloadNow = 0;
   downloadSpeed = 0;
@@ -228,8 +222,7 @@ exit:
 
   socExit();
 
-  if (socubuf)
-    free(socubuf);
+  if (socubuf) free(socubuf);
 
   if (downfile) {
     fclose(downfile);
@@ -333,11 +326,9 @@ void displayProgressBar() {
       downloadSpeed = 0;
     }
     DLSpeed = downloadSpeed;
-    if (DLTotal < 1.0f)
-      DLTotal = 1.0f;
+    if (DLTotal < 1.0f) DLTotal = 1.0f;
 
-    if (DLTotal < DLNow)
-      DLTotal = DLNow;
+    if (DLTotal < DLNow) DLTotal = DLNow;
 
     if (progressBarType == 0) {
       snprintf(str, sizeof(str), "%s / %s (%.2f%%)\nSpeed: %s\nETA: %s",
@@ -395,8 +386,7 @@ bool checkWifiStatus(void) {
   u32 wifiStatus;
   bool res = false;
 
-  if (R_SUCCEEDED(ACU_GetWifiStatus(&wifiStatus)) && wifiStatus)
-    res = true;
+  if (R_SUCCEEDED(ACU_GetWifiStatus(&wifiStatus)) && wifiStatus) res = true;
 
   return res;
 }

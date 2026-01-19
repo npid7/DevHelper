@@ -22,8 +22,7 @@ void Warnings::Logic() {
 
   if (delay >= 5 * 60) {
     msgposy++ /*=(int)RenderD7::GetDeltaTime*/;
-    if (msgposy > 400)
-      this->Kill();
+    if (msgposy > 400) this->Kill();
   }
 }
 
@@ -51,7 +50,6 @@ void Errors::Logic() {
 
   if (delay >= 5 * 60) {
     msgposy++ /*=(int)RenderD7::GetDeltaTime*/;
-    if (msgposy > 400)
-      this->Kill();
+    if (msgposy > 400) this->Kill();
   }
 }

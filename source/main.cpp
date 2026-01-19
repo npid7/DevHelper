@@ -1,8 +1,9 @@
+#include <rd7.hpp>
+#include <renderd7/log.hpp>
+
 #include "Ovls.hpp"
 #include "nightlyreader.hpp"
 #include "scenes.hpp"
-#include <rd7.hpp>
-#include <renderd7/log.hpp>
 
 int main() {
   rd7_do_splash = true;
@@ -13,12 +14,13 @@ int main() {
   rd7_security->SafeInit(amInit, amExit);
   RenderD7::Msg::Display("DevHelper", "Initializing...", Top);
 
-  RenderD7::AddOvl(std::make_unique<Warnings>("DevHelper", "Whwn loading data at some points\nthe app could randomly crash..."));
+  RenderD7::AddOvl(std::make_unique<Warnings>(
+      "DevHelper",
+      "Whwn loading data at some points\nthe app could randomly crash..."));
 
   RenderD7::Scene::Load(std::make_unique<DBSel>());
   while (RenderD7::MainLoop()) {
-    if (d7_hDown & KEY_START)
-      RenderD7::ExitApp();
+    if (d7_hDown & KEY_START) RenderD7::ExitApp();
 
     RenderD7::FrameEnd();
   }

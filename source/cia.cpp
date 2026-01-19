@@ -1,4 +1,5 @@
 #include "cia.hpp"
+
 #include <renderd7/log.hpp>
 
 Result CIA_LaunchTitle(u64 titleId, FS_MediaType mediaType) {
@@ -82,8 +83,7 @@ Result installCia(const char *ciaPath, bool updatingSelf) {
 
   if (!updatingSelf) {
     ret = deletePrevious(info.titleID, media);
-    if (R_FAILED(ret))
-      return ret;
+    if (R_FAILED(ret)) return ret;
   }
 
   ret = FSFILE_GetSize(fileHandle, &size);
@@ -128,8 +128,7 @@ Result installCia(const char *ciaPath, bool updatingSelf) {
   }
 
   if (updatingSelf) {
-    if (R_FAILED(ret = CIA_LaunchTitle(info.titleID, MEDIATYPE_SD)))
-      return ret;
+    if (R_FAILED(ret = CIA_LaunchTitle(info.titleID, MEDIATYPE_SD))) return ret;
   }
 
   return 0;
